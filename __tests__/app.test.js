@@ -9,17 +9,17 @@ const mockUser = {
   password: '12345',
 };
 
-// const registerAndLogin = async (userProps = {}) => {
-//   const password = userProps.password ?? mockUser.password;
+const registerAndLogin = async (userProps = {}) => {
+  const password = userProps.password ?? mockUser.password;
 
-//   const agent = request.agent(app);
+  const agent = request.agent(app);
 
-//   const user = UserService.create({ ...mockUser, ...userProps });
+  const user = UserService.create({ ...mockUser, ...userProps });
 
-//   const { email } = user;
-//   await (await agent.post('/api/v1/users/Totoros')).send({ email, password });
-//   return [agent, user];
-// };
+  const { email } = user;
+  await (await agent.post('/api/v1/users/sessions')).send({ email, password });
+  return [agent, user];
+};
 
 
 describe('alchemy-app routes', () => {
@@ -37,6 +37,16 @@ describe('alchemy-app routes', () => {
     expect(res.body).toEqual({
       id: expect.any(String),
       email,
+    });
+  });
+
+  it('returns the current user', async () => {
+    const [agent, user] = await registerAndLogin();
+    const me = await agent.get('/api/v1/users/me');
+
+    expect(me.body).toEqual({ ...user,
+      exp: expect.any(Number),
+      iat: expect.any(Number),
     });
   });
 });
