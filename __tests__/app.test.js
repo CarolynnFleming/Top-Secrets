@@ -9,17 +9,17 @@ const mockUser = {
   password: '12345',
 };
 
-const registerAndLogin = async (userProps = {}) => {
-  const password = userProps.password ?? mockUser.password;
+// const registerAndLogin = async (userProps = {}) => {
+//   const password = userProps.password ?? mockUser.password;
 
-  const agent = request.agent(app);
+//   const agent = request.agent(app);
 
-  const user = UserService.create({ ...mockUser, ...userProps });
+//   const user = UserService.create({ ...mockUser, ...userProps });
 
-  const { email } = user;
-  await (await agent.post('/api/v1/users/Totoros')).send({ email, password });
-  return [agent, user];
-};
+//   const { email } = user;
+//   await (await agent.post('/api/v1/users/Totoros')).send({ email, password });
+//   return [agent, user];
+// };
 
 
 describe('alchemy-app routes', () => {
@@ -31,7 +31,7 @@ describe('alchemy-app routes', () => {
     pool.end();
   });
   it('creates a new user', async() => {
-    const res = await (await request(app).post('/api/v1/users')).send({ mockUser });
+    const res = await request(app).post('/api/v1/users').send(mockUser);
     const {  email } = mockUser;
 
     expect(res.body).toEqual({
