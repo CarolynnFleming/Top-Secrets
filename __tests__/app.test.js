@@ -5,8 +5,6 @@ const app = require('../lib/app');
 const UserService = require('../lib/services/UserService');
 
 const mockUser = {
-  firstName: 'Test',
-  lastName: 'User',
   email: 'test@example.com',
   password: '12345',
 };
@@ -15,7 +13,7 @@ const registerAndLogin = async (userProps = {}) => {
   const password = userProps.password ?? mockUser.password;
 
   const agent = request.agent(app);
-  
+
   const user = UserService.create({ ...mockUser, ...userProps });
 
   const { email } = user;
@@ -34,12 +32,10 @@ describe('alchemy-app routes', () => {
   });
   it('creates a new user', async() => {
     const res = await (await request(app).post('/api/v1/users')).send({ mockUser });
-    const { firstName, lastName, email } = mockUser;
+    const {  email } = mockUser;
 
     expect(res.body).toEqual({
       id: expect.any(String),
-      firstName,
-      lastName,
       email,
     });
   });
