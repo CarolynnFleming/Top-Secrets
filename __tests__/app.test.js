@@ -41,12 +41,26 @@ describe('alchemy-app routes', () => {
   });
 
   it('returns the current user', async () => {
-    const [agent, user] = await registerAndLogin();
-    const me = await agent.get('/api/v1/users/me');
+    const agent = request.agent(app);
 
-    expect(me.body).toEqual({ ...user,
-      exp: expect.any(Number),
-      iat: expect.any(Number),
-    });
+    const user = await UserService.create({ ...mockUser, });
+
+    const { email } = user;
+    const password = mockUser.password;
+
+    const expected = {
+      message: 'Signed in successfully!',
+    };
+
+    const res = await agent
+      .post('/api/v1/users/sessions')
+      .send({ email, password
+      });
+
+    expect(res.body).toEqual(expected);
+    expect(res.status).toEqual(200);
+
+    
   });
 });
+
